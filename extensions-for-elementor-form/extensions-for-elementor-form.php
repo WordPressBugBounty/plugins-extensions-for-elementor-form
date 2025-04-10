@@ -7,20 +7,21 @@
  * Author: Cool Plugins
  * Author URI: https://coolplugins.net/
  * Text Domain: extensions-for-elementor-form
- * Version: 2.4.2
+ * Version: 2.4.3
  * Requires at least: 6.2
  * Requires PHP: 6.2
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Requires Plugins: elementor
- * Elementor tested up to: 3.28.0
- * Elementor Pro tested up to: 3.28.0
+ * Elementor tested up to: 3.28.3
+ * Elementor Pro tested up to: 3.28.2
  */
 
 namespace Cool_FormKit;
 
 use Cool_FormKit\Includes\Module_Base;
 use Cool_FormKit\Includes\CFL_Loader;
+use Cool_FormKit\Widgets\CFL_Addons_Loader;
 
 if (! defined('ABSPATH')) {
 	header('Status: 403 Forbidden');
@@ -28,7 +29,7 @@ if (! defined('ABSPATH')) {
 	exit();
 }
 
-define('CFL_VERSION','2.4.2');
+define('CFL_VERSION','2.4.3');
 define('PHP_MINIMUM_VERSION','7.4');
 define('WP_MINIMUM_VERSION','5.5');
 define( 'CFL_PLUGIN_MAIN_FILE', __FILE__ );
@@ -74,7 +75,8 @@ class Cool_Formkit_Lite_For_Elementor_Form
 			$this->initialize_plugin();
 
 			// add_action( 'activated_plugin', array( $this, 'EEF_plugin_redirection' ) );
-			add_action('wp_enqueue_scripts', array($this, 'my_enqueue_scripts'));			
+			add_action('wp_enqueue_scripts', array($this, 'my_enqueue_scripts'));	
+			add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'add_global_editor_js' ) );		
 
 
 		}
@@ -108,7 +110,9 @@ class Cool_Formkit_Lite_For_Elementor_Form
 		// Include main plugin class.
 		require_once CFL_PLUGIN_PATH . '/includes/class-plugin.php';
 		CFL_Loader::get_instance();
-		
+
+		require_once CFL_PLUGIN_PATH . 'widgets/cfl-addons-loader.php';		
+		CFL_Addons_Loader::get_instance();
 		
 		if (is_admin()) {
 
@@ -162,6 +166,11 @@ class Cool_Formkit_Lite_For_Elementor_Form
 
 
 		return true;
+	}
+
+	public function add_global_editor_js() {
+		wp_enqueue_script( 'cfl-global-editor-script', CFL_PLUGIN_URL . 'assets/addons/js/global.js', array( 'jquery' ), CFL_VERSION, true );
+
 	}
 
 	public function EEF_plugin_dashboard_link($links)
@@ -291,6 +300,10 @@ class Cool_Formkit_Lite_For_Elementor_Form
 		update_option('eef-v', CFL_VERSION);
 		update_option('eef-type', 'FREE');
 		update_option('eef-installDate', gmdate('Y-m-d h:i:s'));
+
+		if (!get_option( 'Cool_Formkit_Lite_initial_save_version' ) ) {
+			add_option( 'Cool_Formkit_Lite_initial_save_version', CFL_VERSION );
+		}
 	}
 
 

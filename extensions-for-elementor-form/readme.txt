@@ -3,11 +3,11 @@
 Contributors: coolplugins, narinder-singh, satindersingh
 Tags: form builder, elementor form, elementor, contact form, custom form
 Requires at least: 6.2
-Tested up to: 6.7.2
-Stable tag: 2.4.2
+Tested up to: 6.8
+Stable tag: 2.4.3
 Requires PHP: 8.2
-Elementor tested up to: 3.28.0
-Elementor Pro tested up to: 3.28.0
+Elementor tested up to: 3.28.3
+Elementor Pro tested up to: 3.28.2
 License: GPL 3.0
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,7 @@ We’re actively improving Cool FormKit Lite. Future updates will include condit
 == Screenshots ==
 1. Cool FormKit Lite preview.
 2. Cool FormKit Lite form.
+3. Cool Formkit Entries.
 
 == Frequently Asked Questions ==
 
@@ -141,11 +142,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+=  Version 2.4.3 | 10/04/2025 =
+* **Added:** Conditional field support.
+* **Added:** Country Code option for telephone field.
+* **Added:** Recaptcha integration for enhanced security.
+* **Tested upto:** WordPress 6.8.
+
+
 =  Version 2.4.2 | 26/03/2025 =
 * **Added:** **Collect Entries** Action after submit a form.
 * **Added:** **Dashboard & Entries** page to view and manage form entries.
-* **Added:** Review Notice feature in the dashboard and form editor.
-* **Fixed:** The default value not sent in the select field.
+* **Added:** Review Notice in the dashboard and form editor.
+* **Fixed:** Default value not sent in the select field.
 * **Improved:** Security improvements.
 
 =  Version 2.4.1 | 18/03/2025 =
