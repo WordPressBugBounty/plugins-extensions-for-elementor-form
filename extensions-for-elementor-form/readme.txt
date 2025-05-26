@@ -3,11 +3,11 @@
 Contributors: coolplugins, narinder-singh, satindersingh
 Tags: form builder, elementor form, elementor, contact form, custom form
 Requires at least: 6.2
-Tested up to: 6.8
-Stable tag: 2.4.4
+Tested up to: 6.8.1
+Stable tag: 2.4.5
 Requires PHP: 8.2
-Elementor tested up to: 3.28.3
-Elementor Pro tested up to: 3.28.2
+Elementor tested up to: 3.29.0
+Elementor Pro tested up to: 3.29.0
 License: GPL 3.0
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,9 +17,13 @@ Cool FormKit - A contact form builder for Elementor with a drag-and-drop Element
 
 https://youtu.be/u1PYFXv01Rc
 
-**Cool FormKit Lite** is a powerful form builder for Elementor, designed to give Elementor (Free) users access to **form-building** capabilities that were previously only available to **Elementor Pro users**.
+**[Cool FormKit Lite](https://coolplugins.net/cool-formkit-lite/?utm_source=cfkl_plugin&utm_medium=readme&utm_campaign=demo&utm_content=view_plugin)** is a powerful form builder for Elementor, designed to give Elementor (Free) users access to **form-building** capabilities that were previously only available to **Elementor Pro users**.
 
 This addon allows you to build **custom forms** using a **drag-and-drop** interface, just like Elementor. Create **Contact Forms, Registration Forms, Survey Forms**, and more without writing a single line of code.
+
+— —————————————- —
+[**CHECK PLUGIN DEMO**](https://coolplugins.net/cool-formkit-lite/?utm_source=cfkl_plugin&utm_medium=readme&utm_campaign=demo&utm_content=check_plugin_demo)
+— —————————————- —
 
 **Key Features**
 
@@ -144,6 +148,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
    - Save and publish the page to display the form on your site.
 
 == Changelog ==
+
+= Version 2.4.5| 26/05/2025 = 
+* **Improvements:** Enhanced user opt-in options for better customization.
+* **Fixed:** All fields visible on load.
+* **Tested upto:** Elementor Version 3.29.0 and Elementor Pro Version 3.29.0 
 
 =  Version 2.4.4 | 11/04/2025 =
 * **Fixed:** Critical error occurring during plugin activation on certain server configurations.

@@ -7,14 +7,14 @@
  * Author: Cool Plugins
  * Author URI: https://coolplugins.net/
  * Text Domain: extensions-for-elementor-form
- * Version: 2.4.4
+ * Version: 2.4.5
  * Requires at least: 6.2
  * Requires PHP: 6.2
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Requires Plugins: elementor
- * Elementor tested up to: 3.28.3
- * Elementor Pro tested up to: 3.28.2
+ * Elementor tested up to: 3.29.0
+ * Elementor Pro tested up to: 3.29.0
  */
 
 namespace Cool_FormKit;
@@ -29,7 +29,7 @@ if (! defined('ABSPATH')) {
 	exit();
 }
 
-define('CFL_VERSION','2.4.4');
+define('CFL_VERSION','2.4.5');
 define('PHP_MINIMUM_VERSION','7.4');
 define('WP_MINIMUM_VERSION','5.5');
 define( 'CFL_PLUGIN_MAIN_FILE', __FILE__ );
@@ -109,6 +109,8 @@ class Cool_Formkit_Lite_For_Elementor_Form
 	{
 		// Include main plugin class.
 		require_once CFL_PLUGIN_PATH . '/includes/class-plugin.php';
+		require_once CFL_PLUGIN_PATH . '/includes/cron/cfl-class-cron.php';
+
 		CFL_Loader::get_instance();
 
 		require_once CFL_PLUGIN_PATH . 'widgets/cfl-addons-loader.php';		
@@ -120,7 +122,11 @@ class Cool_Formkit_Lite_For_Elementor_Form
 			new Review_notice();
 
 			require_once CFL_PLUGIN_PATH . 'admin/feedback/admin-feedback-form.php';
+			if(!class_exists('CPFM_Feedback_Notice')){
+				require_once CFL_PLUGIN_PATH . 'admin/feedback/cpfm-feedback-notice.php';
+			}
 		}
+
 		// add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'EEF_plugin_dashboard_link' ) );
 
 	}
@@ -300,14 +306,37 @@ class Cool_Formkit_Lite_For_Elementor_Form
 		update_option('eef-v', CFL_VERSION);
 		update_option('eef-type', 'FREE');
 		update_option('eef-installDate', gmdate('Y-m-d h:i:s'));
+		
+		if (!get_option( 'CFL_initial_save_version' ) ) {
+			add_option( 'CFL_initial_save_version', CFL_VERSION );
+		}
+		
+		if(!get_option( 'cfl-install-date' ) ) {
+			add_option( 'cfl-install-date', gmdate('Y-m-d h:i:s') );
+        }
 
-		if (!get_option( 'Cool_Formkit_Lite_initial_save_version' ) ) {
-			add_option( 'Cool_Formkit_Lite_initial_save_version', CFL_VERSION );
+		$settings       = get_option('cfl_usage_share_data');
+           
+        if (!empty($settings) || $settings === 'on'){
+			
+			self::cfl_cron_job_init();
+        }
+		
+	}
+		
+	public static function cfl_cron_job_init()
+	{
+		if (!wp_next_scheduled('cfl_extra_data_update')) {
+			wp_schedule_event(time(), 'every_30_days', 'cfl_extra_data_update');
 		}
 	}
 
+	public static function eef_deactivate() {
 
-	public static function eef_deactivate() {}
+        if (wp_next_scheduled('cfl_extra_data_update')) {
+            wp_clear_scheduled_hook('cfl_extra_data_update');
+        }
+	}
 }
 
 // Initialize the plugin.
