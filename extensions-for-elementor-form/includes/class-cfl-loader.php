@@ -10,6 +10,7 @@ use Cool_FormKit\Includes\Frontend\CFKEF_Frontend;
 
 use Cool_FormKit\Includes\Frontend\Widget\Custom_Success_Message;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 /**
  * The file that defines the core plugin class
@@ -129,8 +130,11 @@ class CFL_Loader {
         require_once CFL_PLUGIN_PATH . 'admin/class-cfkef-admin.php';
         $plugin_admin = CFKEF_Admin::get_instance($this->get_plugin_name(), $this->get_version());
         if(get_option('cfkef_enable_elementor_pro_form', true)){
-            require_once CFL_PLUGIN_PATH . 'includes/frontend/class-cfl-frontend.php';
-            $plugin_public = new CFKEF_Frontend($this->get_plugin_name(), $this->get_version());
+            if(is_plugin_active( 'elementor-pro/elementor-pro.php') || is_plugin_active('pro-elements/pro-elements.php')){
+
+                require_once CFL_PLUGIN_PATH . 'includes/frontend/class-cfl-frontend.php';
+                $plugin_public = new CFKEF_Frontend($this->get_plugin_name(), $this->get_version());
+            }
         }
     }
 

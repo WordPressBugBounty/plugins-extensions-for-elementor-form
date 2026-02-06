@@ -14,6 +14,11 @@ use Elementor\Controls_Manager;
 use Elementor\Repeater;
 use ElementorPro\Plugin;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 	/**
 	 * Class for creating conditional fields and varify logic comparision before send
 	 */
@@ -53,19 +58,22 @@ class CFL_Create_Conditional_Fields {
 	public function add_assets_files() {
 		wp_register_script( 'cfl_logic', CFL_PLUGIN_URL . 'assets//js/form_logic_frontend.js', array( 'jquery' ), CFL_VERSION, true );
 
-		wp_localize_script('cfl_logic', 'my_script_vars', array(
+		wp_localize_script('cfl_logic', 'my_script_vars_elementor', array(
 			'pluginConstant' => CFL_VERSION,
 			'pluginUrl' => CFL_PLUGIN_URL,
-			'no_input_step' => __('No input is required on this step. Just click "%s" to proceed.', 'cool-formkit'),
-		    'next_button'   => __('Next', 'cool-formkit'),
+			/* translators: %s: Label of the button to continue to the next step */
+			'no_input_step' => __('No input is required on this step. Just click "%s" to proceed.', 'extensions-for-elementor-form'),
+		    'next_button'   => __('Next', 'extensions-for-elementor-form'),
 		));
 	
 		// Add hidden class CSS
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion	
 		wp_register_style( 'hide_field_class_style', false );
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 		wp_enqueue_style( 'hide_field_class_style' );
 		wp_add_inline_style(
 			'hide_field_class_style',
-				'.cfef-hidden {
+				'.cfef-hidden , .cfef-hidden-step-field {
 					display: none !important;
 			 	}'
 		);
@@ -111,7 +119,7 @@ class CFL_Create_Conditional_Fields {
 			'form_fields_conditions_tab' => array(
 				'type'         => 'tab',
 				'tab'          => 'content', 
-				'label'        => esc_html__( 'Conditions', 'cool-formkit' ),
+				'label'        => esc_html__( 'Conditions', 'extensions-for-elementor-form' ),
 				'tabs_wrapper' => 'form_fields_tabs',
 				'name'         => 'form_fields_conditions_tab',
 				'condition'    => array(
@@ -120,7 +128,7 @@ class CFL_Create_Conditional_Fields {
 			),
 			'cfef_logic' => array(
 				'name'         => 'cfef_logic',
-				'label'        => esc_html__( 'Enable Conditions', 'cool-formkit' ),
+				'label'        => esc_html__( 'Enable Conditions', 'extensions-for-elementor-form' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_conditions_tab',
@@ -128,15 +136,15 @@ class CFL_Create_Conditional_Fields {
 			),
 				'cfef_logic_mode' => array(
 				'name'    => 'cfef_logic_mode',
-				'label'   => esc_html__( 'Show / Hide Field', 'cool-formkit' ),
+				'label'   => esc_html__( 'Show / Hide Field', 'extensions-for-elementor-form' ),
 				'type'    => Controls_Manager::CHOOSE,
 				'options' => array(
 					'show' => array(
-						'title' => esc_html__( 'Show', 'cool-formkit' ),
+						'title' => esc_html__( 'Show', 'extensions-for-elementor-form' ),
 						'icon'  => 'far fa-eye',
 					),
 					'hide' => array(
-						'title' => esc_html__( 'Hide', 'cool-formkit' ),
+						'title' => esc_html__( 'Hide', 'extensions-for-elementor-form' ),
 						'icon'  => 'far fa-eye-slash',
 					),
 				),
@@ -150,11 +158,11 @@ class CFL_Create_Conditional_Fields {
 			),
              'cfef_logic_meet' => array(
 				'name'         => 'cfef_logic_meet',
-				'label'        => esc_html__( 'Conditions Trigger', 'cool-formkit' ),
+				'label'        => esc_html__( 'Conditions Trigger', 'extensions-for-elementor-form' ),
 				'type'         => Controls_Manager::SELECT,
 				'options'      => array(
-					'All' => esc_html__('All - AND Conditions','cool-formkit'),
-					'Any' => esc_html__('Any - OR Conditions','cool-formkit'),
+					'All' => esc_html__('All - AND Conditions','extensions-for-elementor-form'),
+					'Any' => esc_html__('Any - OR Conditions','extensions-for-elementor-form'),
 				),
 				'default'      => 'All',
 				'tab'          => 'content',
@@ -166,7 +174,7 @@ class CFL_Create_Conditional_Fields {
 			),
 			'cfef_repeater_data' => array(
 				'name'           => 'cfef_repeater_data',
-				'label'          => esc_html__( 'Show / Hide Fields If', 'cool-formkit' ),
+				'label'          => esc_html__( 'Show / Hide Fields If', 'extensions-for-elementor-form' ),
 				'type'           => Controls_Manager::REPEATER,
 				'tab'            => 'content',
 				'inner_tab'      => 'form_fields_conditions_tab',
@@ -174,7 +182,7 @@ class CFL_Create_Conditional_Fields {
 				'fields'         => array(
 					array(
 						'name'        => 'cfef_logic_field_id',
-						'label'       => esc_html__( 'Field ID', 'cool-formkit' ),
+						'label'       => esc_html__( 'Field ID', 'extensions-for-elementor-form' ),
 						'type'        => Controls_Manager::TEXT,
 						'label_block' => true,
 						'default'     => '',
@@ -184,28 +192,28 @@ class CFL_Create_Conditional_Fields {
 					),
 					array(
 						'name'        => 'cfef_logic_field_is',
-						'label'       => esc_html__( 'Operator', 'cool-formkit' ),
+						'label'       => esc_html__( 'Operator', 'extensions-for-elementor-form' ),
 						'type'        => Controls_Manager::SELECT,
 						'label_block' => true,
 						'options'     => array(
-							'==' => esc_html__( 'is equal ( == )', 'cool-formkit' ),
-							'!=' => esc_html__( 'is not equal (!=)', 'cool-formkit' ),
-							'>'  => esc_html__( 'greater than (>)', 'cool-formkit' ),
-							'<'  => esc_html__( 'less than (<)', 'cool-formkit' ),
-							'>='  => esc_html__( 'greater than equal (>=)', 'cool-formkit' ),
-							'<='  => esc_html__( 'less than equal (<=)', 'cool-formkit' ),
-							'e'  => esc_html__( "empty ('')", 'cool-formkit' ),
-							'!e' => esc_html__( 'not empty', 'cool-formkit' ),
-							'c'  => esc_html__( 'contains', 'cool-formkit' ),
-							'!c' => esc_html__( 'does not contain', 'cool-formkit' ),
-							'^'  => esc_html__( 'starts with', 'cool-formkit' ),
-							'~'  => esc_html__( 'ends with', 'cool-formkit' ),
+							'==' => esc_html__( 'is equal ( == )', 'extensions-for-elementor-form' ),
+							'!=' => esc_html__( 'is not equal (!=)', 'extensions-for-elementor-form' ),
+							'>'  => esc_html__( 'greater than (>)', 'extensions-for-elementor-form' ),
+							'<'  => esc_html__( 'less than (<)', 'extensions-for-elementor-form' ),
+							'>='  => esc_html__( 'greater than equal (>=)', 'extensions-for-elementor-form' ),
+							'<='  => esc_html__( 'less than equal (<=)', 'extensions-for-elementor-form' ),
+							'e'  => esc_html__( "empty ('')", 'extensions-for-elementor-form' ),
+							'!e' => esc_html__( 'not empty', 'extensions-for-elementor-form' ),
+							'c'  => esc_html__( 'contains', 'extensions-for-elementor-form' ),
+							'!c' => esc_html__( 'does not contain', 'extensions-for-elementor-form' ),
+							'^'  => esc_html__( 'starts with', 'extensions-for-elementor-form' ),
+							'~'  => esc_html__( 'ends with', 'extensions-for-elementor-form' ),
 						),
 						'default'     => '==',
 					),
 					array(
 						'name'        => 'cfef_logic_compare_value',
-						'label'       => esc_html__( 'Value to compare', 'cool-formkit' ),
+						'label'       => esc_html__( 'Value to compare', 'extensions-for-elementor-form' ),
 						'type'        => Controls_Manager::TEXT,
 						'label_block' => true,
 						'default'     => '',
@@ -391,6 +399,58 @@ class CFL_Create_Conditional_Fields {
 			echo '<template id="' . esc_attr( $textarea_id ) . '" class="cfef_logic_data_js cfef-hidden" data-form-id="' . esc_attr( $form_id ) . '">' . esc_html( $condition ) . '</template>';
 		}
 	}
+
+
+
+	// delete fields of hidden step field
+
+	public function delete_fields_of_hidden_step($form_fields, $hidden_step, $disallowed_values, $form_record) {
+
+		// Make sure inputs are usable
+		if (!is_array($form_fields) || empty($form_fields)) {
+			return;
+		}
+		if (!is_string($hidden_step) || $hidden_step === '') {
+			return;
+		}
+		if (!is_array($disallowed_values)) {
+			$disallowed_values = [];
+		}
+		if (!is_object($form_record) || !method_exists($form_record, 'remove_field')) {
+			return;
+		}
+
+		// Get all keys of the original array
+		$keys = array_keys($form_fields);
+
+		// Check if hidden step exists
+		if (!in_array($hidden_step, $keys, true)) {
+			return;
+		}
+
+		$index = array_search($hidden_step, $keys, true);
+
+		// Slice array after the hidden step
+		$sliced_array = array_slice($form_fields, $index + 1, null, true);
+
+		foreach ($sliced_array as $key => $value) {
+			// Skip invalid field data
+			if (!is_array($value) || !isset($value['type'])) {
+				continue;
+			}
+
+			if ($value['type'] !== 'step') {
+				// Only check if 'value' exists
+				if (isset($value['value']) && in_array($value['value'], $disallowed_values, true)) {
+					$form_record->remove_field($key);
+				}
+			} else {
+				// Stop at the next step
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Function to validate form before submit and remove hidden fields
 	 *s
@@ -398,6 +458,21 @@ class CFL_Create_Conditional_Fields {
 	 * @param  object $ajax_handler get form all fields.
 	 */
 	public function check_validation( $form_record, $ajax_handler ) {
+
+		$disallowed_values = array(
+			'^newOptionTest',
+			'newchkTest',
+			'1003-01-01',
+			'11:59',
+			'+1234567890',
+			'https://testing.com',
+			'cool_plugins@abc.com',
+			'cool_plugins',
+			'000',
+			'premium1@',
+			'cool23plugins',
+		);
+
 		if ( false === $this->validate_form ) {
 			$submitted_form_settings = $form_record->get( 'form_settings' );
 			$form_fields   = $form_record->get( 'fields' );
@@ -445,8 +520,10 @@ class CFL_Create_Conditional_Fields {
 					}
 
 					if ( 'show' === $display_mode && ! $action_type ) {
+						$this->delete_fields_of_hidden_step($form_fields, $field['custom_id'], $disallowed_values, $form_record);
 						$form_record->remove_field( $field['custom_id'] );
 					} elseif ( 'hide' == $display_mode && $action_type ) {
+						$this->delete_fields_of_hidden_step($form_fields, $field['custom_id'], $disallowed_values, $form_record);
 						$form_record->remove_field( $field['custom_id'] );
 					} 
 				}
@@ -459,7 +536,7 @@ class CFL_Create_Conditional_Fields {
 	public function cfef_elementor_review_notice() {
 		
 		if ( ! check_ajax_referer( 'cfef_elementor_review', 'nonce', false ) ) {
-			wp_send_json_error( __( 'Invalid security token sent.', 'cool-formkit' ) );
+			wp_send_json_error( __( 'Invalid security token sent.', 'extensions-for-elementor-form' ) );
 			wp_die( '0', 400 );
 		}
 

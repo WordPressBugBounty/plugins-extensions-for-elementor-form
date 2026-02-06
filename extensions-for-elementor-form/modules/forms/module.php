@@ -127,8 +127,12 @@ class Module extends Module_Base {
 			CFL_VERSION,
 			true
 		);
-
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion, WordPress.WP.EnqueuedResourceParameters.NotInFooter
 		wp_enqueue_script('Cool_FormKit-forms-editor', true);
+
+		wp_localize_script( 'Cool_FormKit-forms-editor', 'cfkef_plugin_none_label', [
+                'none_label' => sprintf( '- %s -', __( 'None', 'extensions-for-elementor-form' ) ),
+        ] );
 	}
 
 	public function register_scripts() {
